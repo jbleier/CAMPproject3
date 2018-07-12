@@ -36,6 +36,7 @@ npoints = 100
 stims1 = st1*np.ones(npoints)
 resp0 = single_response_frequency(stims1, n0)
 resp1 = single_response_frequency(stims1, n1)
+plt.subplot(121)
 plt.scatter(resp0, resp1, alpha=0.4,
             label="Stimulus orientation {} rad".format(st1))
 
@@ -52,7 +53,7 @@ plt.ylabel("Response of neuron {}".format(n1))
 plt.legend()
 
 plt.gca().set_aspect("equal")
-show()
+
 
 # Now add trivial noise correlations
 
@@ -60,7 +61,7 @@ noise_intensity = 10
 angle = pi/4
 
 noise = np.random.normal(0, noise_intensity, size=(2, npoints))
-
+plt.subplot(122)
 resp0toS1 = single_response_frequency(stims1, n0) + noise[0]*np.sin(angle)
 resp1toS1 = single_response_frequency(stims1, n1) + noise[0]*np.cos(angle)
 plt.scatter(resp0toS1, resp1toS1, alpha=0.4,
