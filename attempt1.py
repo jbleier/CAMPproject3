@@ -63,7 +63,7 @@ noise = np.random.normal(0, noise_intensity, size=(2, npoints))
 
 resp0toS1 = single_response_frequency(stims1, n0) + noise[0]*np.sin(angle)
 resp1toS1 = single_response_frequency(stims1, n1) + noise[0]*np.cos(angle)
-plt.scatter(resp0toS2, resp1toS2, alpha=0.4,
+plt.scatter(resp0toS1, resp1toS1, alpha=0.4,
             label="Stimulus orientation {} rad".format(st1))
 
 resp0toS2 = single_response_frequency(stims2, n0) + noise[1]*np.sin(angle)
