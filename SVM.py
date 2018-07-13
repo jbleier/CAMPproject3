@@ -104,13 +104,11 @@ for i in range(17):
 	plt.figure(2)
 	resp0toS1 = single_response_frequency(stims1, n0) + noise[0]*np.sin(i * angle)
 	resp1toS1 = single_response_frequency(stims1, n1) + noise[0]*np.cos(i * angle)
-	plt.scatter(resp0toS1, resp1toS1, alpha=0.4,
-	            label="Stimulus orientation {} rad".format(i*angle))
+	plt.scatter(resp0toS1, resp1toS1, alpha=0.4)
 
 	resp0toS2 = single_response_frequency(stims2, n0) + noise[1]*np.sin(i * angle)
 	resp1toS2 = single_response_frequency(stims2, n1) + noise[1]*np.cos(i * angle)
-	plt.scatter(resp0toS2, resp1toS2, alpha=0.4,
-	            label="Stimulus orientation {} rad".format(i*angle))
+	plt.scatter(resp0toS2, resp1toS2, alpha=0.4)
 	X_n1 = np.column_stack((resp0toS1, resp1toS1))
 	Y_n1 = np.zeros((len(resp0toS1)))
 	X_n2 = np.column_stack((resp0toS2, resp1toS2))
@@ -123,6 +121,7 @@ for i in range(17):
 	plt.xlim([0, 120])
 	plt.xlabel("Response of neuron {}".format(n0))
 	plt.ylabel("Response of neuron {}".format(n1))
+	plt.title("correlated noise  orientation {} rad".format(i*angle))
 	plt.legend()
 	plt.gca().set_aspect("equal")
 	plot_svc_decision_function(model, color = 'red');

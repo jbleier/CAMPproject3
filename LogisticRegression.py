@@ -100,12 +100,12 @@ for i in range(17):
 	resp0toS1 = single_response_frequency(stims1, n0) + noise[0]*np.sin(i * angle)
 	resp1toS1 = single_response_frequency(stims1, n1) + noise[0]*np.cos(i * angle)
 	plt.scatter(resp0toS1, resp1toS1, alpha=0.4,
-	            label="Stimulus orientation {} rad".format(i*angle))
+	            label="correlated noise  orientation {} rad".format(i*angle))
 
 	resp0toS2 = single_response_frequency(stims2, n0) + noise[1]*np.sin(i * angle)
 	resp1toS2 = single_response_frequency(stims2, n1) + noise[1]*np.cos(i * angle)
 	plt.scatter(resp0toS2, resp1toS2, alpha=0.4,
-	            label="Stimulus orientation {} rad".format(i*angle))
+	            label="correlated noise  orientation {} rad".format(i*angle))
 	X_n1 = np.column_stack((resp0toS1, resp1toS1))
 	Y_n1 = np.zeros((len(resp0toS1)))
 	X_n2 = np.column_stack((resp0toS2, resp1toS2))

@@ -32,9 +32,10 @@ def plot_decision_function(model, ax=None, color='black'):
     P = model.decision_function(xy).reshape(X.shape)
     
     # plot decision boundary and margins
-    ax.contour(X, Y, P, colors=color,
-               levels=[-1, 0, 1], alpha=0.5,
-               linestyles=['--', '-', '--'])
+    boun = ax.contour(X, Y, P, colors=color,
+               levels=[0], alpha=0.5,
+               linestyles=['-'])
+
     
     ax.set_xlim(xlim)
 
@@ -56,76 +57,96 @@ avg_responses = responses.mean(axis=1)
 preferred_orientations = stimuli[np.argmax(avg_responses, axis=1)] % pi
 
 # Without correlations
-
-st1 = 2.  # orientation of the two stimuli
-st2 = st1 +1
-n0, n1 = 0, 1  # choose two neurons
-npoints = 100
-stims1 = st1*np.ones(npoints)
-resp0_1 = single_response_frequency(stims1, n0)
-resp1_1 = single_response_frequency(stims1, n1)
-plt.figure(1)
-plt.scatter(resp0_1, resp1_1, alpha=0.4,
-        label="Stimulus orientation {} rad".format(st1))
-X_1 = np.column_stack((resp0_1, resp1_1))
-Y_1 = np.zeros((len(resp0_1)))
-stims2 = st2*np.ones(npoints)
-resp0_2 = single_response_frequency(stims2, n0)
-resp1_2 = single_response_frequency(stims2, n1)
-plt.scatter(resp0_2, resp1_2, alpha=0.4,
-        label="Stimulus orientation {} rad".format(st2))
-X_2 = np.column_stack((resp0_2, resp1_2))
-Y_2 = np.ones((len(resp0_1)))
-X = np.concatenate((X_1, X_2))
-Y = np.concatenate((Y_1, Y_2))
-#print(X)
-plt.ylim([0, 100])
-plt.xlim([0, 100])
-plt.xlabel("Response of neuron {}".format(n0))
-plt.ylabel("Response of neuron {}".format(n1))
-plt.legend()
-
-plt.gca().set_aspect("equal")
-
-model.fit(X, Y)
-plot_decision_function(model)
-# Now add trivial noise correlations
-
-noise_intensity = 10
-angle = pi/8
-for i in range(17):
-	model1 = LDA();
-	noise = np.random.normal(0, noise_intensity, size=(2, npoints))
-	plt.figure(2)
-	resp0toS1 = single_response_frequency(stims1, n0) + noise[0]*np.sin(i * angle)
-	resp1toS1 = single_response_frequency(stims1, n1) + noise[0]*np.cos(i * angle)
-	plt.scatter(resp0toS1, resp1toS1, alpha=0.4,
-	            label="Stimulus orientation {} rad".format(i*angle))
-
-	resp0toS2 = single_response_frequency(stims2, n0) + noise[1]*np.sin(i * angle)
-	resp1toS2 = single_response_frequency(stims2, n1) + noise[1]*np.cos(i * angle)
-	plt.scatter(resp0toS2, resp1toS2, alpha=0.4,
-	            label="Stimulus orientation {} rad".format(i*angle))
-	X_n1 = np.column_stack((resp0toS1, resp1toS1))
-	Y_n1 = np.zeros((len(resp0toS1)))
-	X_n2 = np.column_stack((resp0toS2, resp1toS2))
-	Y_n2 = np.ones((len(resp0toS2)))
-	Xn = np.concatenate((X_n1, X_n2))
-	Yn = np.concatenate((Y_n1, Y_n2))
-	model1.fit(Xn, Yn);
-
-	plt.ylim([0, 120])
-	plt.xlim([0, 120])
+for j in range(10):
+	st1 = 2.  # orientation of the two stimuli
+	st2 = st1 +1 +j
+	n0, n1 = 0, 1  # choose two neurons
+	npoints = 100
+	stims1 = st1*np.ones(npoints)
+	resp0_1 = single_response_frequency(stims1, n0)
+	resp1_1 = single_response_frequency(stims1, n1)
+	plt.figure(1)
+	plt.scatter(resp0_1, resp1_1, alpha=0.4,
+	        label="Stimulus orientation {} rad".format(st1))
+	X_1 = np.column_stack((resp0_1, resp1_1))
+	Y_1 = np.zeros((len(resp0_1)))
+	stims2 = st2*np.ones(npoints)
+	resp0_2 = single_response_frequency(stims2, n0)
+	resp1_2 = single_response_frequency(stims2, n1)
+	plt.scatter(resp0_2, resp1_2, alpha=0.4,
+	        label="Stimulus orientation {} rad".format(st2))
+	X_2 = np.column_stack((resp0_2, resp1_2))
+	Y_2 = np.ones((len(resp0_1)))
+	X = np.concatenate((X_1, X_2))
+	Y = np.concatenate((Y_1, Y_2))
+	#print(X)
+	plt.ylim([0, 100])
+	plt.xlim([0, 100])
 	plt.xlabel("Response of neuron {}".format(n0))
 	plt.ylabel("Response of neuron {}".format(n1))
 	plt.legend()
+
 	plt.gca().set_aspect("equal")
-	plot_decision_function(model, color = 'red');
-	plot_decision_function(model1);
-	#print(model1.score(Xn,Yn))
-	#print(model.score(Xn,Yn))
-	plt.draw()
-	plt.pause(2)
-	plt.clf()
+
+	model.fit(X, Y)
+	plot_decision_function(model)
+	# Now add trivial noise correlations
+	acc_uncorr=[]
+	acc_corr=[]
+	orientation_angle=[]
+	noise_intensity = 10
+	angle = pi/8
+	for i in range(17):
+		model1 = LDA();
+		noise = np.random.normal(0, noise_intensity, size=(2, npoints))
+		plt.figure(2)
+		resp0toS1 = single_response_frequency(stims1, n0) + noise[0]*np.sin(i * angle)
+		resp1toS1 = single_response_frequency(stims1, n1) + noise[0]*np.cos(i * angle)
+		plt.scatter(resp0toS1, resp1toS1, alpha=0.4)
+
+		resp0toS2 = single_response_frequency(stims2, n0) + noise[1]*np.sin(i * angle)
+		resp1toS2 = single_response_frequency(stims2, n1) + noise[1]*np.cos(i * angle)
+		plt.scatter(resp0toS2, resp1toS2, alpha=0.4)
+		X_n1 = np.column_stack((resp0toS1, resp1toS1))
+		Y_n1 = np.zeros((len(resp0toS1)))
+		X_n2 = np.column_stack((resp0toS2, resp1toS2))
+		Y_n2 = np.ones((len(resp0toS2)))
+		Xn = np.concatenate((X_n1, X_n2))
+		Yn = np.concatenate((Y_n1, Y_n2))
+		model1.fit(Xn, Yn);
+		legend_elements = [Line2D([0], [0], color='b', lw=4, label='Line'),
+                   Line2D([0], [0], marker='o', color='w', label='Scatter',
+                          markerfacecolor='g', markersize=15)]
+
+		plt.legend(handles=legend_elements, loc='center')
 
 
+		plt.ylim([0, 120])
+		plt.xlim([0, 120])
+		plt.xlabel("Response of neuron {}".format(n0))
+		plt.ylabel("Response of neuron {}".format(n1))
+		#plt.legend()
+		plt.title("correlated noise  orientation {} rad".format(i*angle))
+		plt.gca().set_aspect("equal")
+		plot_decision_function(model, color = 'red');
+		plot_decision_function(model1);
+		acc_uncorr.append(model.score(Xn,Yn))
+		acc_corr.append(model1.score(Xn,Yn))
+		orientation_angle.append(i*angle)
+		plt.draw()
+		plt.pause(0.5)
+		plt.clf()
+
+
+	plt.figure(3)
+	plt.plot(orientation_angle,acc_uncorr,label = "Classifier A")
+	plt.plot(orientation_angle,acc_corr,label = "Classifier B")
+	plt.legend()
+	plt.show()
+	#time.sleep(10)
+	plt.close()
+	plt.figure(2)
+	plt.close()
+	plt.figure(1)
+	plt.close()
+	print(j)
