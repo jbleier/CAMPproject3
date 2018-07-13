@@ -114,11 +114,10 @@ for j in range(10):
 		Xn = np.concatenate((X_n1, X_n2))
 		Yn = np.concatenate((Y_n1, Y_n2))
 		model1.fit(Xn, Yn);
-		legend_elements = [Line2D([0], [0], color='b', lw=4, label='Line'),
-                   Line2D([0], [0], marker='o', color='w', label='Scatter',
-                          markerfacecolor='g', markersize=15)]
+		legend_elements = [Line2D([0], [0], color='r', lw=1, label='Classifer A'),
+                   Line2D([0], [0], color='black', lw=1, label='Classifier B')]
 
-		plt.legend(handles=legend_elements, loc='center')
+		plt.legend(handles=legend_elements)
 
 
 		plt.ylim([0, 120])
